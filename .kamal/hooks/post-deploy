@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+set -eo pipefail
+ssh vaibhav@23.100.73.113 bash -s <<'REMOTE'
+  set -e
+  CID=$(docker ps -q --filter "name=fizzy-web" | head -1)
+  [ -z "$CID" ] && exit 0
+  sudo docker network disconnect vmattoo-shared "$CID" 2>/dev/null || true
+  sudo docker network connect --alias fizzy-web vmattoo-shared "$CID"
+  echo "post-deploy: aliased $CID as fizzy-web on vmattoo-shared"
+REMOTE
