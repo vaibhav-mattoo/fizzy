@@ -26,12 +26,16 @@ registry:
 env:
   clear:
     BASE_URL: https://tasks.vmattoo.dev
-    MAILER_FROM_ADDRESS: noreply@vmattoo.dev
+    MAILER_FROM_ADDRESS: vaibhavmattoo1@gmail.com   # MUST match SMTP_USERNAME for Gmail
     MULTI_TENANT: "false"
+    SMTP_ADDRESS: smtp.gmail.com
+    SMTP_PORT: "587"
   secret:
     - SECRET_KEY_BASE
     - VAPID_PUBLIC_KEY
     - VAPID_PRIVATE_KEY
+    - SMTP_USERNAME
+    - SMTP_PASSWORD
 
 builder:
   arch: amd64
