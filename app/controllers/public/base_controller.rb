@@ -6,6 +6,14 @@ class Public::BaseController < ApplicationController
 
   layout "public"
 
+  # Public boards are embedded on the personal site; allow only that origin
+  # to frame them. Authenticated pages keep the default same-origin policy.
+  content_security_policy do |policy|
+    policy.frame_ancestors :self, "https://vmattoo.dev"
+  end
+
+  after_action { response.headers.delete("X-Frame-Options") }
+
   private
     def set_board
       @board = Board.find_by_published_key(params[:board_id] || params[:id])

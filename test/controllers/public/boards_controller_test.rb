@@ -12,6 +12,20 @@ class Public::BoardsControllerTest < ActionDispatch::IntegrationTest
     assert_response :success
   end
 
+  test "show can be framed by the personal site" do
+    get published_board_path(boards(:writebook))
+
+    assert_nil response.headers["X-Frame-Options"]
+    assert_match %r{frame-ancestors 'self' https://vmattoo.dev}, response.headers["Content-Security-Policy"]
+  end
+
+  test "authenticated pages still refuse to be framed" do
+    get board_path(boards(:writebook))
+
+    assert_equal "SAMEORIGIN", response.headers["X-Frame-Options"]
+    assert_match %r{frame-ancestors 'self'(;|$)}, response.headers["Content-Security-Policy"]
+  end
+
   test "not found if the board is not published" do
     key = boards(:writebook).publication.key
 
